@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-xl">
+  <div>
+    <h1 class="mb-sm">Test Sessions</h1>
+    <p style="color: var(--text-secondary);">
+      View all automated QA test sessions and their results
+    </p>
+  </div>
+  <a href="{{ url_for('run_test_page', token=token) }}" class="btn btn-primary">
+    <span>+</span> Run New Test
+  </a>
+</div>
+
+<!-- Sessions Grid -->
+{% if sessions %}
+<div class="grid grid-3">
+  {% for s in sessions %}
+  <div class="card fade-in">
+    <!-- Session Header -->
+    <div style="margin-bottom: var(--space-md);">
+      <div class="flex justify-between items-center mb-sm">
+        <span style="color: var(--text-tertiary); font-size: 0.875rem; font-weight: 600;">
+          SESSION #{{ s.id }}
+        </span>
+        <span class="badge status-{{ s.status }}">{{ s.status }}</span>
+      </div>
+
+      <!-- URL -->
+      <h3 class="card-title"
+        style="font-size: 1rem; margin-bottom: var(--space-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+        title="{{ s.url }}">
+        {{ s.url }}
+      </h3>
+
+      <!-- Domain -->
+      <div style="font-size: 0.75rem; color: var(--text-tertiary);">
+        {% set parsed_url = s.url | replace('https://', '') | replace('http://', '') %}
+        {% set domain = parsed_url.split('/')[0] %}
+        {{ domain }}
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div
+      style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); padding: var(--space-md) 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: var(--space-md);">
+      <div class="text-center">
+        <div class="{{ 'text-error' if s.issue_count and s.issue_count > 0 else 'text-success' }}"
+          style="font-size: 1.5rem; font-weight: 700;">
+          {{ s.issue_count or 0 }}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">Issues</div>
+      </div>
+
+      <div class="text-center">
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-secondary);">
+          {{ s.screenshot_count or 0 }}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">Screenshots</div>
+      </div>
+
+      <div class="text-center">
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-secondary);">
+          {{ s.depth or 1 }}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-tertiary);">Depth</div>
+      </div>
+    </div>
+
+    <!-- Timestamp -->
+    <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: var(--space-md);">
+      🕐 {{ s.created_at }}
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-sm">
+      <a href="{{ url_for('get_session_detail', session_id=s.id, token=token) }}" class="btn btn-primary btn-sm"
+        style="flex: 1;">
+        View Report
+      </a>
+      <a href="{{ url_for('export_session_csv', session_id=s.id, token=token) }}" class="btn btn-secondary btn-sm"
+        title="Export CSV">
+        📥
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<!-- Empty State -->
+<div class="card text-center" style="padding: var(--space-2xl);">
+  <div style="font-size: 4rem; margin-bottom: var(--space-lg); opacity: 0.3;">🔍</div>
+  <h2 style="margin-bottom: var(--space-md);">No sessions yet</h2>
+  <p
+    style="color: var(--text-secondary); margin-bottom: var(--space-xl); max-width: 500px; margin-left: auto; margin-right: auto;">
+    Get started by running your first automated QA test. WebSpector will analyze your website and detect visual and
+    functional issues using AI.
+  </p>
+  <a href="{{ url_for('run_test_page', token=token) }}" class="btn btn-primary btn-lg">
+    <span>▶</span> Run Your First Test
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

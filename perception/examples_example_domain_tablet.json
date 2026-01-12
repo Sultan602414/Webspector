@@ -1,0 +1,28 @@
+{
+  "screenshot_path": "captures/example_dry_run/screenshots/tablet/0002.png",
+  "semantic_caption": "Tablet view of the example domain page with centered content and a single call-to-action link.",
+  "detected_elements": [
+    {
+      "text": "Example Domain",
+      "bbox": [160, 200, 320, 48],
+      "confidence": 93.0
+    },
+    {
+      "text": "Learn more",
+      "bbox": [220, 320, 180, 36],
+      "confidence": 90.0
+    }
+  ],
+  "visual_features": {
+    "width": 768,
+    "height": 1024,
+    "avg_luminance": 0.82,
+    "contrast": 0.11,
+    "text_area_ratio": 0.06,
+    "layout_density": 0.09,
+    "num_text_blocks": 2,
+    "placeholder_fraction": 0.45
+  },
+  "anomaly_score": 0.3,
+  "findings": []
+}

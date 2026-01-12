@@ -1,0 +1,11 @@
+site_name,url,pages_to_test,expected_functionality,category
+"OpenCart Demo","https://demo.opencart.com","/;/index.php?route=product/product&product_id=43","Browse products, view product details, add to cart, start checkout.","e_commerce"
+"Magento Luma Demo","https://magento.softwaretestingboard.com","/;/what-is-new.html;/gear.html","Navigate categories, view product details, add to cart, start guest checkout.","e_commerce"
+"Automation Practice","http://automationpractice.com/index.php","/index.php;/index.php?id_product=1&controller=product","Search products, add to cart, validate cart contents.","e_commerce"
+"Ghost Blog Demo","https://demo.ghost.io","/;/tag/getting-started","Open blog posts, navigate via tags, validate article content loads.","blog"
+"React Docs","https://react.dev","/learn;/reference","Navigate documentation sidebar, open multiple pages, ensure code examples render.","content"
+"TodoMVC React","https://todomvc.com/examples/react","/","Create, toggle, and delete todos; filter Active/Completed; ensure URL-based filters work.","spa"
+"The Internet (Practice Site)","https://the-internet.herokuapp.com","/login;/dropdown;/dynamic_loading/1","Test login form validation, dropdown selection, dynamic loading spinner and content.","forms"
+"DemoQA Forms","https://demoqa.com","/automation-practice-form","Fill and submit the practice form; validate required fields and success confirmation.","forms"
+"RealWorld Demo (Conduit)","https://demo.realworld.io","/;/login;/register","Register/login, create article, favorite/unfavorite articles.","spa"
+"Wikipedia","https://en.wikipedia.org","/wiki/Main_Page;/wiki/Software_testing","Use search, follow internal links, ensure article navigation works.","content"

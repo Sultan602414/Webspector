@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSpector - Agentic AI for Automated Website QA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <!-- Header & Navigation -->
+    <header class="header">
+      <div class="header-container">
+        <!-- Logo & Branding -->
+        <div class="logo-section">
+          <div class="logo">WS</div>
+          <div class="brand">
+            <div class="brand-title">WebSpector</div>
+            <div class="brand-tagline">Agentic AI for Automated Website QA</div>
+          </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="nav">
+          <a href="{{ url_for('dashboard_home', token=token) }}" 
+             class="nav-link {% if request.endpoint == 'dashboard_home' %}active{% endif %}">
+            Dashboard
+          </a>
+          <a href="{{ url_for('run_test_page', token=token) }}" 
+             class="nav-link {% if request.endpoint == 'run_test_page' %}active{% endif %}">
+            Run Test
+          </a>
+          <a href="{{ url_for('list_sessions', token=token) }}" 
+             class="nav-link {% if request.endpoint == 'list_sessions' %}active{% endif %}">
+            Sessions
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BugAnnotation",
+  "description": "Schema for ground-truth and predicted web UI bug annotations.",
+  "type": "object",
+  "required": [
+    "url",
+    "viewport",
+    "screenshot_path",
+    "issue_type",
+    "severity",
+    "description"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Full URL of the page where the issue occurs."
+    },
+    "viewport": {
+      "type": "object",
+      "description": "Viewport configuration for the browser when the issue was observed.",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "device": {"type": "string", "description": "Device name or profile (e.g., desktop_1080p, iphone_12)."},
+        "is_mobile": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "screenshot_path": {
+      "type": "string",
+      "description": "Relative path to the screenshot image file capturing the issue."
+    },
+    "issue_type": {
+      "type": "string",
+      "description": "Category of the issue.",
+      "enum": [
+        "layout",
+        "visual",
+        "functional",
+        "performance",
+        "accessibility",
+        "content",
+        "network",
+        "other"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "description": "Severity level of the issue.",
+      "enum": [
+        "blocker",
+        "critical",
+        "major",
+        "minor",
+        "trivial"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "Short natural language description of the issue."
+    },
+    "steps_to_reproduce": {
+      "type": "string",
+      "description": "Detailed steps to reproduce the issue (optional)."
+    },
+    "expected_behavior": {
+      "type": "string",
+      "description": "What should have happened instead (optional)."
+    },
+    "actual_behavior": {
+      "type": "string",
+      "description": "What actually happened (optional)."
+    },
+    "dom_snapshot_path": {
+      "type": "string",
+      "description": "Relative path to a DOM snapshot file, if available."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the issue was recorded."
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Identifier linking this annotation to a specific test run."
+    },
+    "page_context": {
+      "type": "object",
+      "description": "Additional context such as form name, component ID, or user role.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

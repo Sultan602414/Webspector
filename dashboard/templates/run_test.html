@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-md">Start New QA Analysis</h1>
+        <p style="color: var(--text-secondary); font-size: 1.0625rem;">
+            Enter a website URL to begin automated quality assurance testing. WebSpector will explore the site, capture
+            screenshots, and use AI to detect visual and functional issues.
+        </p>
+    </div>
+
+    <!-- Test Configuration Form -->
+    <div class="card">
+        <form id="test-form" method="POST" action="{{ url_for('trigger_run') }}">
+            <!-- URL Input -->
+            <div class="form-group">
+                <label class="form-label" for="url">
+                    Website URL <span style="color: var(--error);">*</span>
+                </label>
+                <input type="url" id="url" name="url" class="form-input" placeholder="https://example.com" required
+                    pattern="https?://.+" />
+                <div class="form-label-small">
+                    Must start with http:// or https://
+                </div>
+            </div>
+
+            <!-- Advanced Options (Collapsible) -->
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary btn-sm mb-md" onclick="toggleAdvanced()"
+                    id="advanced-toggle">
+                    ▼ Advanced Options
+                </button>
+
+                <div id="advanced-options" class="hidden">
+                    <!-- Viewport Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Viewport</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="viewport" value="desktop" checked />
+                                Desktop (1920x1080)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="viewport" value="tablet" />
+                                Tablet (768x1024)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="viewport" value="mobile" />
+                                Mobile (375x667)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Depth Slider -->
+                    <div class="form-group">
+                        <label class="form-label" for="depth">
+                            Exploration Depth: <span id="depth-value">1</span>
+                        </label>
+                        <input type="range" id="depth" name="depth" min="1" max="3" value="1"
+                            style="width: 100%; accent-color: var(--accent-primary);"
+                            oninput="document.getElementById('depth-value').textContent = this.value" />
+                        <div class="form-label-small">
+                            Higher depth = more pages explored, longer test time
+                        </div>
+                    </div>
+
+                    <!-- Optional Label -->
+                    <div class="form-group">
+                        <label class="form-label" for="label">
+                            Test Label (Optional)
+                        </label>
+                        <input type="text" id="label" name="label" class="form-input"
+                            placeholder="e.g., Homepage redesign test" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group" style="margin-bottom: 0;">
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submit-btn">
+                    <span>🔍</span> Start QA Analysis
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Progress Indicator (Hidden by default) -->
+    <div id="progress-section" class="card mt-xl hidden">
+        <div class="card-header">
+            <h3 class="card-title">Test in Progress</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-md">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div id="status-text" class="text-center" style="color: var(--text-secondary);">
+                <div class="loader" style="margin: 0 auto var(--space-md) auto;"></div>
+                Initializing test...
+            </div>
+            <div id="session-link" class="text-center mt-lg hidden">
+                <a href="#" class="btn btn-primary" id="view-report-btn">
+                    View Report →
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Toggle advanced options
+    function toggleAdvanced() {
+        const options = document.getElementById('advanced-options');
+        const button = document.getElementById('advanced-toggle');
+
+        if (options.classList.contains('hidden')) {
+            options.classList.remove('hidden');
+            button.textContent = '▲ Advanced Options';
+        } else {
+            options.classList.add('hidden');
+            button.textContent = '▼ Advanced Options';
+        }
+    }
+
+    // Handle form submission
+    document.getElementById('test-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+        const submitBtn = document.getElementById('submit-btn');
+        const progressSection = document.getElementById('progress-section');
+
+        // Disable form and show progress
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="pulse">⟳</span> Starting test...';
+        form.style.opacity = '0.5';
+        form.style.pointerEvents = 'none';
+        progressSection.classList.remove('hidden');
+
+        try {
+            // Submit test
+            const response = await fetch('{{ url_for("trigger_run") }}', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const result = await response.json();
+            const sessionId = result.session_id;
+
+            // Start polling for status
+            pollSessionStatus(sessionId);
+
+        } catch (error) {
+            console.error('Error starting test:', error);
+            alert('Failed to start test: ' + error.message);
+
+            // Re-enable form
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>🔍</span> Start QA Analysis';
+            form.style.opacity = '1';
+            form.style.pointerEvents = 'auto';
+            progressSection.classList.add('hidden');
+        }
+    });
+
+    // Poll session status
+    let pollInterval;
+    let progress = 0;
+
+    function pollSessionStatus(sessionId) {
+        const statusMessages = [
+            'Launching browser...',
+            'Loading website...',
+            'Capturing screenshots...',
+            'Analyzing layout...',
+            'Running AI perception...',
+            'Detecting visual anomalies...',
+            'Classifying issues...',
+            'Generating report...'
+        ];
+
+        let messageIndex = 0;
+
+        // Update status message periodically
+        const messageInterval = setInterval(() => {
+            if (messageIndex < statusMessages.length) {
+                document.getElementById('status-text').innerHTML = `
+        <div class="loader" style="margin: 0 auto var(--space-md) auto;"></div>
+        ${statusMessages[messageIndex]}
+      `;
+                messageIndex++;
+
+                // Update progress bar
+                progress = Math.min(progress + 10, 90);
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }
+        }, 2000);
+
+        // Poll for actual status
+        pollInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`/session/${sessionId}?format=json`);
+                const data = await response.json();
+
+                if (data.session.status === 'completed') {
+                    clearInterval(pollInterval);
+                    clearInterval(messageInterval);
+
+                    // Complete progress
+                    document.getElementById('progress-fill').style.width = '100%';
+                    document.getElementById('status-text').innerHTML = `
+          <div style="color: var(--success); font-size: 1.25rem; font-weight: 600;">
+            ✓ Test Completed!
+          </div>
+          <div style="margin-top: var(--space-sm);">
+            Found ${data.session.issue_count || 0} issues
+          </div>
+        `;
+
+                    // Show view report button
+                    const viewBtn = document.getElementById('view-report-btn');
+                    viewBtn.href = `/session/${sessionId}?token={{ token }}`;
+                    document.getElementById('session-link').classList.remove('hidden');
+
+                    // Auto-redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = `/session/${sessionId}?token={{ token }}`;
+                    }, 2000);
+
+                } else if (data.session.status === 'failed') {
+                    clearInterval(pollInterval);
+                    clearInterval(messageInterval);
+
+                    document.getElementById('status-text').innerHTML = `
+          <div style="color: var(--error); font-size: 1.25rem; font-weight: 600;">
+            ✗ Test Failed
+          </div>
+          <div style="margin-top: var(--space-sm);">
+            Please try again or check the server logs.
+          </div>
+        `;
+                    document.getElementById('progress-fill').style.width = '0%';
+                }
+
+            } catch (error) {
+                console.error('Error polling status:', error);
+            }
+        }, 3000); // Poll every 3 seconds
+    }
+</script>
+{% endblock %}

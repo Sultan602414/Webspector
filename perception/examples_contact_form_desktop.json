@@ -1,0 +1,42 @@
+{
+  "screenshot_path": "captures/my_form_site/screenshots/desktop/0003.png",
+  "semantic_caption": "A modern contact form centered on the page with fields for name, email, subject, and message, and a prominent submit button.",
+  "detected_elements": [
+    {
+      "text": "Contact Us",
+      "bbox": [420, 140, 260, 50],
+      "confidence": 94.0
+    },
+    {
+      "text": "Submit",
+      "bbox": [520, 520, 160, 40],
+      "confidence": 91.0
+    },
+    {
+      "text": "Name",
+      "bbox": [380, 240, 160, 32],
+      "confidence": 89.0
+    }
+  ],
+  "visual_features": {
+    "width": 1366,
+    "height": 768,
+    "avg_luminance": 0.78,
+    "contrast": 0.16,
+    "text_area_ratio": 0.09,
+    "layout_density": 0.18,
+    "num_text_blocks": 3,
+    "placeholder_fraction": 0.25
+  },
+  "anomaly_score": 0.22,
+  "findings": [
+    {
+      "type": "high_layout_density",
+      "severity": "low",
+      "message": "Many edges and visual elements; layout may be crowded or cluttered.",
+      "metadata": {
+        "layout_density": 0.18
+      }
+    }
+  ]
+}

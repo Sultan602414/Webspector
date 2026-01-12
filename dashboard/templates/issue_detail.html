@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <div class="card">
+    <div class="flex justify-between items-center mb-lg">
+      <h1 style="margin: 0;">Issue #{{ issue.id }}</h1>
+      <a href="{{ url_for('get_session_detail', session_id=issue.session_id, token=request.args.get('token', '')) }}"
+        class="btn btn-secondary">
+        ← Back to Session
+      </a>
+    </div>
+
+    <!-- Issue Header -->
+    <div class="mb-lg" style="padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-color);">
+      <div class="flex gap-md items-center mb-md" style="flex-wrap: wrap;">
+        <span class="badge badge-{{ issue.severity }}">{{ issue.severity }}</span>
+        <span style="color: var(--text-tertiary);">{{ issue.issue_type }}</span>
+        <span style="color: var(--text-tertiary);">{{ issue.issue_class }}</span>
+      </div>
+      <h2 style="margin-bottom: var(--space-md);">{{ issue.title }}</h2>
+      <p style="color: var(--text-secondary);">{{ issue.description }}</p>
+    </div>
+
+    <!-- Details -->
+    <div class="mb-lg">
+      <h3 class="mb-md">Classification Details</h3>
+      <div class="grid grid-2">
+        <div>
+          <strong>Schema Severity:</strong>
+          <div style="color: var(--text-secondary);">{{ issue.schema_severity }}</div>
+        </div>
+        <div>
+          <strong>Recommended Action:</strong>
+          <div style="color: var(--text-secondary);">{{ issue.recommended_action }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Structured Report (if available) -->
+    {% if issue.structured_report %}
+    <div>
+      <h3 class="mb-md">Detailed Analysis</h3>
+      <div
+        style="background: var(--bg-secondary); padding: var(--space-lg); border-radius: var(--radius-md); font-family: monospace; font-size: 0.875rem; overflow-x: auto;">
+        <pre style="margin: 0; color: var(--text-secondary);">{{ issue.structured_report | tojson(indent=2) }}</pre>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

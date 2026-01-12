@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+dashboard.db
+
+# Captures and Screenshots
+captures/
+screenshots/
+*.png
+*.jpg
+*.jpeg
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test outputs
+test_output/
+test_actions.db
+
+# Playwright
+.playwright/
+
+# Gemini artifacts (keep documentation but not session-specific stuff)
+.gemini/antigravity/brain/*/
+
+# Keep example files
+!.env.example

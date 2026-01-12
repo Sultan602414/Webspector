@@ -1,0 +1,37 @@
+{
+  "screenshot_path": "captures/example_dry_run/screenshots/mobile/0001.png",
+  "semantic_caption": "A simple example landing page with a centered title, description text, and a link to learn more.",
+  "detected_elements": [
+    {
+      "text": "Example Domain",
+      "bbox": [80, 120, 240, 40],
+      "confidence": 92.5
+    },
+    {
+      "text": "This domain is for use in documentation examples without needing permission.",
+      "bbox": [60, 170, 280, 60],
+      "confidence": 88.0
+    }
+  ],
+  "visual_features": {
+    "width": 360,
+    "height": 640,
+    "avg_luminance": 0.85,
+    "contrast": 0.09,
+    "text_area_ratio": 0.08,
+    "layout_density": 0.12,
+    "num_text_blocks": 2,
+    "placeholder_fraction": 0.4
+  },
+  "anomaly_score": 0.35,
+  "findings": [
+    {
+      "type": "low_contrast",
+      "severity": "medium",
+      "message": "Overall grayscale contrast appears low; text may be hard to read.",
+      "metadata": {
+        "contrast": 0.09
+      }
+    }
+  ]
+}

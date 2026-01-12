@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero mb-xl">
+    <h1 style="font-size: 3rem; margin-bottom: var(--space-md);">
+        Automated Website QA<br />
+        <span
+            style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Powered
+            by AI</span>
+    </h1>
+    <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin-bottom: var(--space-xl);">
+        WebSpector autonomously explores websites, detects visual and functional issues, and generates comprehensive QA
+        reports using advanced AI perception.
+    </p>
+    <a href="{{ url_for('run_test_page', token=token) }}" class="btn btn-primary btn-lg">
+        <span>▶</span> Run New Test
+    </a>
+</section>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4 mb-xl" id="stats-grid">
+    <div class="stat-card fade-in">
+        <div class="stat-icon">🔍</div>
+        <div class="stat-value" id="total-tests">0</div>
+        <div class="stat-label">Total Tests</div>
+    </div>
+
+    <div class="stat-card fade-in" style="animation-delay: 0.1s;">
+        <div class="stat-icon">🐛</div>
+        <div class="stat-value" id="total-issues">0</div>
+        <div class="stat-label">Issues Found</div>
+    </div>
+
+    <div class="stat-card fade-in" style="animation-delay: 0.2s;">
+        <div class="stat-icon">🔴</div>
+        <div class="stat-value" id="critical-issues">0</div>
+        <div class="stat-label">Critical Issues</div>
+    </div>
+
+    <div class="stat-card fade-in" style="animation-delay: 0.3s;">
+        <div class="stat-icon">✓</div>
+        <div class="stat-value" id="tests-today">0</div>
+        <div class="stat-label">Tests Today</div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="grid grid-2 mb-xl">
+    <!-- Severity Distribution Chart -->
+    <div class="card fade-in" style="animation-delay: 0.4s;">
+        <div class="card-header">
+            <h3 class="card-title">Severity Distribution</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="severity-chart" style="max-height: 300px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Issue Types Chart -->
+    <div class="card fade-in" style="animation-delay: 0.5s;">
+        <div class="card-header">
+            <h3 class="card-title">Issue Types Breakdown</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="issue-types-chart" style="max-height: 300px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Sessions -->
+<div class="card fade-in" style="animation-delay: 0.6s;">
+    <div class="card-header">
+        <h3 class="card-title">Recent Sessions</h3>
+        <a href="{{ url_for('list_sessions', token=token) }}" class="btn btn-secondary btn-sm">
+            View All
+        </a>
+    </div>
+    <div class="table-container">
+        <table class="table" id="recent-sessions-table">
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Status</th>
+                    <th>Issues</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="recent-sessions-body">
+                <!-- Populated by JavaScript -->
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: var(--space-xl); color: var(--text-tertiary);">
+                        <div class="loader" style="margin: 0 auto var(--space-md) auto;"></div>
+                        Loading sessions...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // Fetch session data and populate dashboard
+    async function loadDashboardData() {
+        try {
+            const response = await fetch('/sessions?format=json');
+            const sessions = await response.json();
+
+            // Calculate statistics
+            const totalTests = sessions.length;
+            let totalIssues = 0;
+            let criticalIssues = 0;
+            let testsToday = 0;
+
+            const severityCounts = { critical: 0, high: 0, medium: 0, low: 0 };
+            const issueTypeCounts = { UI: 0, navigation: 0, responsiveness: 0, functional: 0 };
+
+            const today = new Date().toDateString();
+
+            sessions.forEach(session => {
+                totalIssues += session.issue_count || 0;
+
+                // Count tests today
+                const sessionDate = new Date(session.created_at).toDateString();
+                if (sessionDate === today) {
+                    testsToday++;
+                }
+            });
+
+            // Fetch detailed issue data for charts (from first 10 sessions for performance)
+            for (const session of sessions.slice(0, 10)) {
+                try {
+                    const detailResponse = await fetch(`/session/${session.id}?format=json`);
+                    const detail = await detailResponse.json();
+
+                    detail.issues.forEach(issue => {
+                        // Count severities
+                        const severity = issue.severity.toLowerCase();
+                        if (severityCounts.hasOwnProperty(severity)) {
+                            severityCounts[severity]++;
+                        }
+                        if (severity === 'critical') {
+                            criticalIssues++;
+                        }
+
+                        // Count issue types
+                        const issueClass = issue.issue_class;
+                        if (issueTypeCounts.hasOwnProperty(issueClass)) {
+                            issueTypeCounts[issueClass]++;
+                        }
+                    });
+                } catch (err) {
+                    console.log('Could not fetch session detail:', err);
+                }
+            }
+
+            // Animate counters
+            animateCounter('total-tests', totalTests);
+            animateCounter('total-issues', totalIssues);
+            animateCounter('critical-issues', criticalIssues);
+            animateCounter('tests-today', testsToday);
+
+            // Create charts
+            createSeverityChart(severityCounts);
+            createIssueTypesChart(issueTypeCounts);
+
+            // Populate recent sessions table
+            populateRecentSessions(sessions.slice(0, 5));
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+        }
+    }
+
+    // Animate counter
+    function animateCounter(id, target) {
+        const element = document.getElementById(id);
+        const duration = 1000; // 1 second
+        const steps = 30;
+        const increment = target / steps;
+        let current = 0;
+        let step = 0;
+
+        const timer = setInterval(() => {
+            step++;
+            current = Math.min(Math.ceil(increment * step), target);
+            element.textContent = current;
+
+            if (step >= steps) {
+                clearInterval(timer);
+                element.textContent = target;
+            }
+        }, duration / steps);
+    }
+
+    // Create severity distribution chart
+    function createSeverityChart(data) {
+        const ctx = document.getElementById('severity-chart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Critical', 'High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [data.critical, data.high, data.medium, data.low],
+                    backgroundColor: [
+                        '#DC2626', // Critical
+                        '#F59E0B', // High
+                        '#FBBF24', // Medium
+                        '#3B82F6'  // Low
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#94A3B8', padding: 15 }
+                    }
+                }
+            }
+        });
+    }
+
+    // Create issue types chart
+    function createIssueTypesChart(data) {
+        const ctx = document.getElementById('issue-types-chart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['UI', 'Navigation', 'Responsive', 'Functional'],
+                datasets: [{
+                    label: 'Issues',
+                    data: [data.UI, data.navigation, data.responsiveness, data.functional],
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94A3B8', stepSize: 1 },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        ticks: { color: '#94A3B8' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // Populate recent sessions table
+    function populateRecentSessions(sessions) {
+        const tbody = document.getElementById('recent-sessions-body');
+
+        if (sessions.length === 0) {
+            tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: var(--space-xl); color: var(--text-tertiary);">
+          No sessions yet. <a href="{{ url_for('run_test_page', token=token) }}">Run your first test!</a>
+        </td>
+      </tr>
+    `;
+            return;
+        }
+
+        tbody.innerHTML = sessions.map(session => {
+            const statusBadge = `<span class="badge status-${session.status}">${session.status}</span>`;
+            const timeAgo = getTimeAgo(session.created_at);
+            const url = new URL(session.url).hostname;
+
+            return `
+      <tr>
+        <td>
+          <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${session.url}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-tertiary);">${url}</div>
+        </td>
+        <td>${statusBadge}</td>
+        <td>
+          <span style="color: ${session.issue_count > 0 ? 'var(--warning)' : 'var(--success)'}; font-weight: 600;">
+            ${session.issue_count || 0}
+          </span>
+        </td>
+        <td style="color: var(--text-tertiary); font-size: 0.875rem;">${timeAgo}</td>
+        <td>
+          <a href="/session/${session.id}?token={{ token }}" class="btn btn-secondary btn-sm">
+            View Report
+          </a>
+        </td>
+      </tr>
+    `;
+        }).join('');
+    }
+
+    // Get time ago helper
+    function getTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+
+        if (seconds < 60) return 'Just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+        return `${Math.floor(seconds / 86400)}d ago`;
+    }
+
+    // Load data on page load
+    document.addEventListener('DOMContentLoaded', loadDashboardData);
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+playwright
+selenium
+flask
+langchain
+transformers
+torch
+huggingface_hub
+opencv-python
+Pillow
+pytesseract
+sqlalchemy
+pytest
+pydantic
+python-dotenv
+matplotlib
+ollama
