@@ -1,110 +1,160 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div style="max-width: 800px; margin: 0 auto;">
-    <!-- Page Header -->
-    <div class="mb-xl">
-        <h1 class="mb-md">Start New QA Analysis</h1>
-        <p style="color: var(--text-secondary); font-size: 1.0625rem;">
-            Enter a website URL to begin automated quality assurance testing. WebSpector will explore the site, capture
-            screenshots, and use AI to detect visual and functional issues.
-        </p>
-    </div>
-
-    <!-- Test Configuration Form -->
-    <div class="card">
-        <form id="test-form" method="POST" action="{{ url_for('trigger_run') }}">
-            <!-- URL Input -->
-            <div class="form-group">
-                <label class="form-label" for="url">
-                    Website URL <span style="color: var(--error);">*</span>
-                </label>
-                <input type="url" id="url" name="url" class="form-input" placeholder="https://example.com" required
-                    pattern="https?://.+" />
-                <div class="form-label-small">
-                    Must start with http:// or https://
-                </div>
-            </div>
-
-            <!-- Advanced Options (Collapsible) -->
-            <div class="form-group">
-                <button type="button" class="btn btn-secondary btn-sm mb-md" onclick="toggleAdvanced()"
-                    id="advanced-toggle">
-                    ▼ Advanced Options
-                </button>
-
-                <div id="advanced-options" class="hidden">
-                    <!-- Viewport Selection -->
-                    <div class="form-group">
-                        <label class="form-label">Viewport</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="viewport" value="desktop" checked />
-                                Desktop (1920x1080)
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="viewport" value="tablet" />
-                                Tablet (768x1024)
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="viewport" value="mobile" />
-                                Mobile (375x667)
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Depth Slider -->
-                    <div class="form-group">
-                        <label class="form-label" for="depth">
-                            Exploration Depth: <span id="depth-value">1</span>
-                        </label>
-                        <input type="range" id="depth" name="depth" min="1" max="3" value="1"
-                            style="width: 100%; accent-color: var(--accent-primary);"
-                            oninput="document.getElementById('depth-value').textContent = this.value" />
-                        <div class="form-label-small">
-                            Higher depth = more pages explored, longer test time
-                        </div>
-                    </div>
-
-                    <!-- Optional Label -->
-                    <div class="form-group">
-                        <label class="form-label" for="label">
-                            Test Label (Optional)
-                        </label>
-                        <input type="text" id="label" name="label" class="form-input"
-                            placeholder="e.g., Homepage redesign test" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="form-group" style="margin-bottom: 0;">
-                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submit-btn">
-                    <span>🔍</span> Start QA Analysis
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Progress Indicator (Hidden by default) -->
-    <div id="progress-section" class="card mt-xl hidden">
-        <div class="card-header">
-            <h3 class="card-title">Test in Progress</h3>
+<div class="flex-grow flex flex-col items-center justify-center relative px-6 py-20 overflow-hidden">
+    <!-- Ambient Light Background Elements -->
+    <div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full pointer-events-none"></div>
+    
+    <div class="max-w-4xl w-full z-10 text-center space-y-12">
+        <!-- Hero Header -->
+        <div class="space-y-4">
+            <span class="label-md uppercase tracking-[0.3em] text-primary/80 font-bold">Orchestration Engine</span>
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight text-on-surface leading-tight">Start New QA Analysis</h1>
+            <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                Deploy our Ethereal Observer to scan your interface for architectural inconsistencies and performance bottlenecks in real-time.
+            </p>
         </div>
-        <div class="card-body">
-            <div class="mb-md">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+
+        <!-- Central Form Container -->
+        <div class="bg-surface-container-low rounded-[2rem] p-2 md:p-3 shadow-2xl relative group">
+            <!-- Inner Glow Effect -->
+            <div class="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+            
+            <div class="bg-surface-container rounded-[1.8rem] p-8 md:p-12 space-y-8 relative overflow-hidden">
+                <!-- Form Content -->
+                <form id="test-form" method="POST" action="{{ url_for('trigger_run') }}" class="w-full space-y-6">
+                    <div class="space-y-3 text-left">
+                        <label class="text-xs uppercase tracking-widest text-on-surface-variant font-bold ml-1" for="url">Target Application Endpoint</label>
+                        <div class="relative group/input">
+                            <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-outline group-focus-within/input:text-primary transition-colors">
+                                <span class="material-symbols-outlined">language</span>
+                            </div>
+                            <input class="w-full bg-surface-container-highest border-none rounded-xl py-6 pl-16 pr-6 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none transition-all duration-300 text-lg font-medium" 
+                                   id="url" name="url" placeholder="https://your-application.com" type="url" required pattern="https?://.+"/>
+                            <div class="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary to-secondary group-focus-within/input:w-full transition-all duration-500 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Advanced Options -->
+                    <div class="text-left">
+                        <button type="button" onclick="toggleAdvanced()" id="advanced-toggle" class="text-xs uppercase tracking-widest text-primary hover:text-secondary font-bold flex items-center gap-2 transition-colors">
+                            <span class="material-symbols-outlined text-sm" id="advanced-toggle-icon">expand_more</span>
+                            Advanced Configuration
+                        </button>
+                    </div>
+
+                    <!-- Advanced Options (Collapsible) -->
+                    <div id="advanced-options" class="hidden space-y-6 pt-4 border-t border-white/5 text-left">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Viewport Selection -->
+                            <div class="space-y-3">
+                                <label class="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Viewport</label>
+                                <div class="flex flex-wrap gap-4">
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <input type="radio" name="viewport" value="desktop" checked class="w-4 h-4 bg-surface-container-highest border-none text-primary focus:ring-primary focus:ring-offset-surface-container"/>
+                                        <span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Desktop (1920x1080)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <input type="radio" name="viewport" value="tablet" class="w-4 h-4 bg-surface-container-highest border-none text-primary focus:ring-primary focus:ring-offset-surface-container"/>
+                                        <span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Tablet (768x1024)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <input type="radio" name="viewport" value="mobile" class="w-4 h-4 bg-surface-container-highest border-none text-primary focus:ring-primary focus:ring-offset-surface-container"/>
+                                        <span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Mobile (375x667)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Depth Slider -->
+                            <div class="space-y-3">
+                                <label class="text-xs uppercase tracking-widest text-on-surface-variant font-bold" for="depth">Exploration Depth: <span id="depth-value" class="text-primary">1</span></label>
+                                <input type="range" id="depth" name="depth" min="1" max="3" value="1" 
+                                       class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary"
+                                       oninput="document.getElementById('depth-value').textContent = this.value"/>
+                                <p class="text-[10px] text-outline italic">Higher depth = more pages explored, longer test time</p>
+                            </div>
+                        </div>
+
+                        <!-- Optional Label -->
+                        <div class="space-y-3">
+                            <label class="text-xs uppercase tracking-widest text-on-surface-variant font-bold" for="label">Test Label (Optional)</label>
+                            <input type="text" id="label" name="label" class="w-full bg-surface-container-highest border-none rounded-xl py-4 px-6 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none transition-all duration-300 text-sm font-medium" 
+                                   placeholder="e.g., Homepage redesign test"/>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-primary to-secondary text-on-primary font-bold py-6 rounded-xl text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.99] transition-all duration-300">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+                        Start QA Analysis
+                    </button>
+                </form>
+
+                <!-- Progress Section (Hidden by default) -->
+                <div id="progress-section" class="hidden space-y-8 pt-8 border-t border-white/5 animate-fade-in">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-xs uppercase tracking-widest font-bold">
+                            <span class="text-on-surface-variant" id="progress-label">Analysis in progress</span>
+                            <span class="text-primary" id="progress-percent">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                            <div id="progress-fill" class="h-full bg-gradient-to-r from-primary to-secondary w-0 transition-all duration-500 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <div id="status-container" class="bg-surface-container-highest/50 rounded-2xl p-6 flex items-center gap-6">
+                        <div class="relative flex items-center justify-center">
+                            <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                            <span class="material-symbols-outlined absolute text-primary text-xl">biotech</span>
+                        </div>
+                        <div class="space-y-1">
+                            <p id="status-text" class="text-on-surface font-medium">Initializing orchestration engine...</p>
+                            <p class="text-xs text-outline italic" id="status-subtext">Connecting to Ethereal Observer...</p>
+                        </div>
+                    </div>
+
+                    <div id="session-link" class="hidden text-center pt-4">
+                        <a href="#" id="view-report-btn" class="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-sm hover:text-secondary transition-colors">
+                            View Live Analysis Results
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Meta Info Chips -->
+                <div class="flex flex-wrap justify-center gap-4 pt-4">
+                    <div class="bg-surface-container-highest/50 backdrop-blur px-4 py-2 rounded-full flex items-center gap-2 border border-white/5">
+                        <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                        <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Visual Regression</span>
+                    </div>
+                    <div class="bg-surface-container-highest/50 backdrop-blur px-4 py-2 rounded-full flex items-center gap-2 border border-white/5">
+                        <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">API Integrity</span>
+                    </div>
+                    <div class="bg-surface-container-highest/50 backdrop-blur px-4 py-2 rounded-full flex items-center gap-2 border border-white/5">
+                        <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                        <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Performance Audit</span>
+                    </div>
                 </div>
             </div>
-            <div id="status-text" class="text-center" style="color: var(--text-secondary);">
-                <div class="loader" style="margin: 0 auto var(--space-md) auto;"></div>
-                Initializing test...
+        </div>
+
+        <!-- Asymmetric Secondary Insight -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
+            <div class="bg-surface-container-low/40 p-6 rounded-2xl text-left border border-white/5 space-y-3 hover:bg-surface-container-low transition-colors duration-300">
+                <span class="material-symbols-outlined text-primary-container">bolt</span>
+                <h3 class="text-sm font-bold text-on-surface">Instant Telemetry</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">Analysis begins milliseconds after injection, providing live stream results.</p>
             </div>
-            <div id="session-link" class="text-center mt-lg hidden">
-                <a href="#" class="btn btn-primary" id="view-report-btn">
-                    View Report →
-                </a>
+            <div class="bg-surface-container-low/40 p-6 rounded-2xl text-left border border-white/5 space-y-3 hover:bg-surface-container-low transition-colors duration-300">
+                <span class="material-symbols-outlined text-secondary">psychology</span>
+                <h3 class="text-sm font-bold text-on-surface">AI Inference</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">Neural patterns identify UX friction points that standard scripts miss.</p>
+            </div>
+            <div class="bg-surface-container-low/40 p-6 rounded-2xl text-left border border-white/5 space-y-3 hover:bg-surface-container-low transition-colors duration-300">
+                <span class="material-symbols-outlined text-tertiary">security</span>
+                <h3 class="text-sm font-bold text-on-surface">Secure Sandbox</h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">Tests run in isolated, high-compute environments for maximum safety.</p>
             </div>
         </div>
     </div>
@@ -117,14 +167,14 @@
     // Toggle advanced options
     function toggleAdvanced() {
         const options = document.getElementById('advanced-options');
-        const button = document.getElementById('advanced-toggle');
+        const icon = document.getElementById('advanced-toggle-icon');
 
         if (options.classList.contains('hidden')) {
             options.classList.remove('hidden');
-            button.textContent = '▲ Advanced Options';
+            icon.textContent = 'expand_less';
         } else {
             options.classList.add('hidden');
-            button.textContent = '▼ Advanced Options';
+            icon.textContent = 'expand_more';
         }
     }
 
@@ -139,10 +189,14 @@
 
         // Disable form and show progress
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="pulse">⟳</span> Starting test...';
-        form.style.opacity = '0.5';
-        form.style.pointerEvents = 'none';
+        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Starting analysis...';
+        submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+        
+        form.querySelector('.relative.group\\/input').style.opacity = '0.5';
+        form.querySelector('.relative.group\\/input').style.pointerEvents = 'none';
+        
         progressSection.classList.remove('hidden');
+        progressSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         try {
             // Submit test
@@ -167,9 +221,10 @@
 
             // Re-enable form
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<span>🔍</span> Start QA Analysis';
-            form.style.opacity = '1';
-            form.style.pointerEvents = 'auto';
+            submitBtn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' 0;">search</span> Start QA Analysis';
+            submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            form.querySelector('.relative.group\\/input').style.opacity = '1';
+            form.querySelector('.relative.group\\/input').style.pointerEvents = 'auto';
             progressSection.classList.add('hidden');
         }
     });
@@ -180,14 +235,25 @@
 
     function pollSessionStatus(sessionId) {
         const statusMessages = [
-            'Launching browser...',
-            'Loading website...',
-            'Capturing screenshots...',
-            'Analyzing layout...',
-            'Running AI perception...',
-            'Detecting visual anomalies...',
-            'Classifying issues...',
-            'Generating report...'
+            'Launching Ethereal Observer...',
+            'Establishing secure socket...',
+            'Injecting telemetry scripts...',
+            'Capturing visual signatures...',
+            'Running neural perception...',
+            'Detecting structural anomalies...',
+            'Analyzing performance spikes...',
+            'Finalizing orchestration report...'
+        ];
+
+        const subMessages = [
+            'Waking up Playwright instances...',
+            'Bypassing CDN layers...',
+            'Mapping document object model...',
+            'Processing high-fidelity frames...',
+            'Inference engine is dreaming...',
+            'Comparing against accessibility standards...',
+            'Measuring time to first byte...',
+            'Compressing data artifacts...'
         ];
 
         let messageIndex = 0;
@@ -195,17 +261,16 @@
         // Update status message periodically
         const messageInterval = setInterval(() => {
             if (messageIndex < statusMessages.length) {
-                document.getElementById('status-text').innerHTML = `
-        <div class="loader" style="margin: 0 auto var(--space-md) auto;"></div>
-        ${statusMessages[messageIndex]}
-      `;
+                document.getElementById('status-text').textContent = statusMessages[messageIndex];
+                document.getElementById('status-subtext').textContent = subMessages[messageIndex];
                 messageIndex++;
 
                 // Update progress bar
                 progress = Math.min(progress + 10, 90);
                 document.getElementById('progress-fill').style.width = progress + '%';
+                document.getElementById('progress-percent').textContent = progress + '%';
             }
-        }, 2000);
+        }, 2500);
 
         // Poll for actual status
         pollInterval = setInterval(async () => {
@@ -219,38 +284,34 @@
 
                     // Complete progress
                     document.getElementById('progress-fill').style.width = '100%';
-                    document.getElementById('status-text').innerHTML = `
-          <div style="color: var(--success); font-size: 1.25rem; font-weight: 600;">
-            ✓ Test Completed!
-          </div>
-          <div style="margin-top: var(--space-sm);">
-            Found ${data.session.issue_count || 0} issues
-          </div>
-        `;
+                    document.getElementById('progress-percent').textContent = '100%';
+                    document.getElementById('progress-label').textContent = 'Orchestration complete';
+                    
+                    document.getElementById('status-text').innerHTML = '<span class="text-tertiary">✓ Analysis Completed!</span>';
+                    document.getElementById('status-subtext').textContent = `Identified ${data.session.issue_count || 0} critical architectural insights.`;
+                    
+                    document.getElementById('status-container').querySelector('.animate-spin').classList.remove('animate-spin');
+                    document.getElementById('status-container').querySelector('.material-symbols-outlined').textContent = 'check_circle';
+                    document.getElementById('status-container').querySelector('.material-symbols-outlined').classList.add('text-tertiary');
 
                     // Show view report button
                     const viewBtn = document.getElementById('view-report-btn');
                     viewBtn.href = `/session/${sessionId}?token={{ token }}`;
                     document.getElementById('session-link').classList.remove('hidden');
 
-                    // Auto-redirect after 2 seconds
+                    // Auto-redirect after 3 seconds
                     setTimeout(() => {
                         window.location.href = `/session/${sessionId}?token={{ token }}`;
-                    }, 2000);
+                    }, 3000);
 
                 } else if (data.session.status === 'failed') {
                     clearInterval(pollInterval);
                     clearInterval(messageInterval);
 
-                    document.getElementById('status-text').innerHTML = `
-          <div style="color: var(--error); font-size: 1.25rem; font-weight: 600;">
-            ✗ Test Failed
-          </div>
-          <div style="margin-top: var(--space-sm);">
-            Please try again or check the server logs.
-          </div>
-        `;
+                    document.getElementById('status-text').innerHTML = '<span class="text-error">✗ Orchestration Failed</span>';
+                    document.getElementById('status-subtext').textContent = 'The observer encountered an unexpected termination. See logs.';
                     document.getElementById('progress-fill').style.width = '0%';
+                    document.getElementById('progress-percent').textContent = '0%';
                 }
 
             } catch (error) {
