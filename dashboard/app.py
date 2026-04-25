@@ -81,14 +81,14 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
     @app.route("/dashboard", methods=["GET"])
     @require_token
     def dashboard_home() -> Any:
-        """Dashboard home page with statistics and charts."""
-        return render_template("index.html", token=current_app.config.get("DASHBOARD_TOKEN", ""))
+        """Dashboard home page - API only."""
+        return jsonify({"message": "Use the React frontend on port 5173", "status": "active"})
 
     @app.route("/run-test", methods=["GET"])
     @require_token
     def run_test_page() -> Any:
-        """Run test page with form."""
-        return render_template("run_test.html", token=current_app.config.get("DASHBOARD_TOKEN", ""))
+        """Run test page - API only."""
+        return jsonify({"message": "Use the React frontend on port 5173", "status": "active"})
 
 
     @app.route("/sessions", methods=["GET"])
@@ -105,9 +105,7 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
         finally:
             db.close()
 
-        if _wants_json():
-            return jsonify(result)
-        return render_template("sessions.html", sessions=result, token=current_app.config.get("DASHBOARD_TOKEN", ""))
+        return jsonify(result)
 
     @app.route("/session/<int:session_id>", methods=["GET"])
     @require_token
@@ -131,24 +129,12 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
         finally:
             db.close()
 
-        if _wants_json():
-            return jsonify(
-                {
-                    "session": session_dict,
-                    "screenshots": screenshots_payload,
-                    "issues": issues_payload,
-                }
-            )
-
-        severities = ["low", "medium", "high", "critical"]
-        return render_template(
-            "session_detail.html",
-            session=session_dict,
-            screenshots=screenshots_payload,
-            issues=issues_payload,
-            severities=severities,
-            active_severity=severity_filter or "",
-            token=current_app.config.get("DASHBOARD_TOKEN", ""),
+        return jsonify(
+            {
+                "session": session_dict,
+                "screenshots": screenshots_payload,
+                "issues": issues_payload,
+            }
         )
 
     @app.route("/issue/<int:issue_id>", methods=["GET"])
@@ -165,9 +151,7 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
         finally:
             db.close()
 
-        if _wants_json():
-            return jsonify(payload)
-        return render_template("issue_detail.html", issue=payload)
+        return jsonify(payload)
 
     @app.route("/session/<int:session_id>/actions", methods=["GET"])
     @require_token
@@ -212,15 +196,7 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
         finally:
             db.close()
         
-        if _wants_json():
-            return jsonify({'session_id': session_id, 'actions': actions_data})
-        
-        return render_template(
-            "action_timeline.html",
-            session=to_dict_session(session),
-            actions=actions_data,
-            token=current_app.config.get("DASHBOARD_TOKEN", "")
-        )
+        return jsonify({'session_id': session_id, 'actions': actions_data})
 
     @app.route("/session/<int:session_id>/llm-report", methods=["GET"])
     @require_token
@@ -240,19 +216,7 @@ def create_app(test_config: Dict[str, Any] | None = None) -> Flask:
         generator = ComprehensiveReportGenerator()
         report = generator.generate_report(session_id)
         
-        if _wants_json():
-            return jsonify(report)
-        
-        # Export as markdown for display
-        markdown_report = generator.export_as_markdown(report)
-        
-        return render_template(
-            "llm_report.html",
-            session=to_dict_session(session),
-            report=report,
-            markdown_report=markdown_report,
-            token=current_app.config.get("DASHBOARD_TOKEN", "")
-        )
+        return jsonify(report)
 
     @app.route("/screenshot/<int:screenshot_id>", methods=["GET"])
     def get_screenshot(screenshot_id: int) -> Any:

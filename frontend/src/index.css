@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cinematic Design System - Core Palette */
+  --color-primary: #c0c1ff;
+  --color-secondary: #d0bcff;
+  --color-tertiary: #89ceff;
+  --color-error: #ffb4ab;
+  --color-background: #0b1326;
+  --color-surface: #0b1326;
+
+  /* Extended Surface Tokens */
+  --color-surface-dim: #0b1326;
+  --color-surface-bright: #31394d;
+  --color-surface-container-lowest: #060e20;
+  --color-surface-container-low: #131b2e;
+  --color-surface-container: #171f33;
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-highest: #2d3449;
+  --color-surface-variant: #2d3449;
+
+  /* Content & Variant Tokens */
+  --color-on-primary: #1000a9;
+  --color-on-secondary: #3c0091;
+  --color-on-tertiary: #00344d;
+  --color-on-error: #690005;
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #c7c4d7;
+  --color-on-background: #dae2fd;
+
+  /* Structural Tokens */
+  --color-outline: #908fa0;
+  --color-outline-variant: #464554;
+  --color-error-container: #93000a;
+  --color-primary-container: #8083ff;
+  --color-tertiary-container: #009ada;
+
+  /* Typography */
+  --font-inter: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-inter);
+  --font-headline: var(--font-inter);
+  --font-display: var(--font-inter);
+
+  /* Radius */
+  --radius-3xl: 1.5rem;
+  --radius-2xl: 1rem;
+}
+
+:root {
+  /* Legacy/Hybrid Variable Support */
+  --background: #0b1326;
+  --on-surface: #dae2fd;
+  --on-surface-variant: #c7c4d7;
+  --primary: #c0c1ff;
+  --secondary: #d0bcff;
+  --tertiary: #89ceff;
+  --error: #ffb4ab;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Symbols Integration */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Cinematic Utilities */
+.glass-panel {
+  background: rgba(49, 57, 77, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ambient-light {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Landing Page Specific Rules */
+.hero-gradient {
+  background: 
+      radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, #0b1326 0%, #060e20 100%);
+}
+.primary-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+}
+.text-gradient {
+  background: linear-gradient(to right, #fff 20%, #818cf8 40%, #c084fc 60%, #fff 80%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 5s linear infinite;
+}
+@keyframes shine {
+  to { background-position: 200% center; }
+}

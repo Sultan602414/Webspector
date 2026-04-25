@@ -3,68 +3,68 @@
    ============================================ */
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 /* ============================================
    CSS Variables - Design Tokens
    ============================================ */
 :root {
-  /* Colors - Dark Theme */
-  --bg-primary: #0F172A;
-  --bg-secondary: #1E293B;
-  --bg-card: #1E293B;
-  --bg-hover: #334155;
+  /* Cinematic Design Tokens (from provided snippet) */
+  --on-secondary-fixed: #23005c;
+  --primary-fixed-dim: #c0c1ff;
+  --on-tertiary: #00344d;
+  --secondary-fixed: #e9ddff;
+  --primary-fixed: #e1e0ff;
+  --on-background: #dae2fd;
+  --on-secondary-fixed-variant: #5516be;
+  --on-primary: #1000a9;
+  --on-secondary-container: #c4abff;
+  --on-primary-fixed-variant: #2f2ebe;
+  --tertiary-container: #009ada;
+  --on-error-container: #ffdad6;
+  --on-primary-container: #0d0096;
+  --tertiary-fixed-dim: #89ceff;
+  --secondary-container: #571bc1;
+  --inverse-surface: #dae2fd;
+  --inverse-primary: #494bd6;
+  --tertiary-fixed: #c9e6ff;
+  --on-tertiary-fixed: #001e2f;
+  --on-primary-fixed: #07006c;
+  --secondary-fixed-dim: #d0bcff;
+  --on-tertiary-fixed-variant: #004c6e;
+  --on-secondary: #3c0091;
+  --outline: #908fa0;
+  --surface-container-lowest: #060e20;
+  --on-surface-variant: #c7c4d7;
+  --outline-variant: #464554;
 
-  /* Accent Colors */
-  --accent-primary: #3B82F6;
-  --accent-secondary: #8B5CF6;
-  --accent-gradient: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+  /* Overriding existing with same values from snippet for consistency */
+  --background: #0b1326;
+  --surface: #0b1326;
+  --primary: #c0c1ff;
+  --secondary: #d0bcff;
+  --tertiary: #89ceff;
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --on-error: #690005;
+  --on-surface: #dae2fd;
+  --primary-container: #8083ff;
+  --surface-dim: #0b1326;
+  --surface-bright: #31394d;
+  --surface-container-low: #131b2e;
+  --surface-container: #171f33;
+  --surface-container-high: #222a3d;
+  --surface-container-highest: #2d3449;
+  --surface-variant: #2d3449;
 
-  /* Semantic Colors */
-  --success: #10B981;
-  --warning: #F59E0B;
-  --error: #EF4444;
-  --info: #3B82F6;
-
-  /* Severity Colors */
-  --severity-critical: #DC2626;
-  --severity-high: #F59E0B;
-  --severity-medium: #FBBF24;
-  --severity-low: #3B82F6;
-
-  /* Text Colors */
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --text-tertiary: #64748B;
-
-  /* Border & Divider */
-  --border-color: #334155;
-  --divider-color: #1E293B;
-
-  /* Spacing */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 300ms ease;
-  --transition-slow: 500ms ease;
+  /* Legacy compatibility */
+  --bg-primary: var(--background);
+  --bg-secondary: var(--surface-container-low);
+  --bg-card: var(--surface-container);
+  --bg-hover: rgba(255, 255, 255, 0.02);
+  --accent-primary: var(--primary);
+  --accent-secondary: var(--secondary);
+  --accent-gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
 }
 
 /* ============================================
@@ -81,13 +81,40 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   background: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--on-surface);
   line-height: 1.6;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Symbols Integration */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Cinematic Utilities */
+.glass-panel {
+  background: rgba(49, 57, 77, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ambient-light {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ============================================
@@ -147,12 +174,12 @@ a:hover {
    Header & Navigation
    ============================================ */
 .header {
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 30px rgba(10, 12, 30, 0.6);
 }
 
 .header-container {
@@ -172,17 +199,17 @@ a:hover {
 }
 
 .logo {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: var(--accent-gradient);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.25rem;
+  font-weight: 800;
+  font-size: 1.125rem;
   color: white;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 10px 30px rgba(96, 99, 197, 0.12);
 }
 
 .brand {
@@ -224,18 +251,23 @@ a:hover {
 }
 
 .nav-link.active {
-  color: var(--accent-primary);
-  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary);
 }
 
 .nav-link.active::after {
-  content: '';
+  content: "";
   position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent-primary);
+  bottom: -8px;
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(192, 193, 255, 0.95),
+    rgba(208, 188, 255, 0.95)
+  );
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(80, 70, 200, 0.16);
 }
 
 /* ============================================
@@ -381,7 +413,7 @@ a:hover {
 }
 
 .btn-danger:hover {
-  background: #B91C1C;
+  background: #b91c1c;
   color: white;
 }
 
@@ -812,7 +844,6 @@ a:hover {
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;

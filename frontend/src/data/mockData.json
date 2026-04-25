@@ -1,0 +1,202 @@
+{
+  "dashboard": {
+    "stats": {
+      "total_tests": 1,
+      "success_rate": 100,
+      "issues_found": 3,
+      "critical_issues": 0,
+      "tests_today": 1,
+      "velocity_data": [
+        {
+          "name": "08:00",
+          "tests": 0,
+          "issues": 0
+        },
+        {
+          "name": "12:00",
+          "tests": 1,
+          "issues": 3
+        },
+        {
+          "name": "16:00",
+          "tests": 0,
+          "issues": 0
+        }
+      ],
+      "issue_distribution": [
+        {
+          "type": "UI",
+          "count": 1,
+          "color": "#c0c1ff"
+        },
+        {
+          "type": "Nav",
+          "count": 1,
+          "color": "#d0bcff"
+        },
+        {
+          "type": "Func",
+          "count": 1,
+          "color": "#ffb4ab"
+        }
+      ]
+    },
+    "recent_sessions": [
+      {
+        "id": 1,
+        "url": "https://example.com",
+        "status": "completed",
+        "issue_count": 3,
+        "timestamp": "2026-04-18T06:40:54.332154"
+      }
+    ]
+  },
+  "sessions": [
+    {
+      "id": 1,
+      "url": "https://example.com",
+      "status": "completed",
+      "issue_count": 3,
+      "screenshot_count": 3,
+      "timestamp": "2026-04-18T06:40:54.332154"
+    }
+  ],
+  "sessionDetails": {
+    "1": {
+      "session": {
+        "id": 1,
+        "url": "https://example.com",
+        "status": "completed",
+        "quality_score": 85,
+        "timestamp": "2026-04-18T06:40:54.332154"
+      },
+      "screenshots": [
+        {
+          "id": 1,
+          "file_path": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop",
+          "alt_text": "Hero Section"
+        },
+        {
+          "id": 2,
+          "file_path": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
+          "alt_text": "Analytics Dashboard"
+        },
+        {
+          "id": 3,
+          "file_path": "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop",
+          "alt_text": "Grid Layout"
+        }
+      ],
+      "issues": [
+        {
+          "id": 1,
+          "issue_type": "UI_BUG",
+          "severity": "medium",
+          "description": "Button alignment shifts on smaller viewports.",
+          "issue_class": "Visual"
+        },
+        {
+          "id": 2,
+          "issue_type": "ACCESSIBILITY",
+          "severity": "low",
+          "description": "Contrast ratio below 4.5:1 on footer links.",
+          "issue_class": "A11y"
+        },
+        {
+          "id": 3,
+          "issue_type": "FUNCTIONAL",
+          "severity": "high",
+          "description": "Form validation allows empty submissions.",
+          "issue_class": "Logic"
+        }
+      ]
+    }
+  },
+  "issueDetails": {
+    "1": {
+      "id": 1,
+      "title": "Button Alignment Shift",
+      "severity": "medium",
+      "issue_class": "Visual",
+      "issue_type": "UI_BUG",
+      "description": "The CTA button in the hero section shifts its alignment unexpectedly when transitioning from 1024px to 768px viewports, causing overlap with the caption text.",
+      "schema_severity": "Moderate",
+      "recommended_action": "Apply flex-center or fixed margin-top.",
+      "structured_report": {
+        "viewport": "768x1024",
+        "component": "HeroCTA",
+        "detected_shift": "12px right"
+      },
+      "screenshot": {
+        "file_path": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"
+      }
+    }
+  },
+  "actionTimeline": {
+    "1": {
+      "actions": [
+        {
+          "id": 1,
+          "action": "LOAD_PAGE",
+          "summary": "Hydrated DOM at https://example.com",
+          "status": "SUCCESS",
+          "timestamp": "2026-04-18T06:40:54.332154"
+        },
+        {
+          "id": 2,
+          "action": "CLICK_NAV",
+          "summary": "Triggered sidebar transition to /dashboard",
+          "status": "SUCCESS",
+          "timestamp": "2026-04-18T06:41:00.000000"
+        },
+        {
+          "id": 3,
+          "action": "ANALYZE_UI",
+          "summary": "Anomaly detected in button alignment.",
+          "status": "WARNING",
+          "timestamp": "2026-04-18T06:41:05.000000"
+        }
+      ]
+    }
+  },
+  "llmReport": {
+    "1": {
+      "quality_score": 85,
+      "risk_level": "LOW",
+      "execution_metrics": {
+        "total_actions": 3,
+        "passed": 2,
+        "failed": 0
+      },
+      "actions": [
+        {
+          "action": "LOAD_PAGE",
+          "status": "SUCCESS",
+          "summary": "Page ready in 1.2s"
+        },
+        {
+          "action": "CLICK_NAV",
+          "status": "SUCCESS",
+          "summary": "Menu opened successfully"
+        },
+        {
+          "action": "ANALYZE_UI",
+          "status": "WARNING",
+          "summary": "Alignment anomaly detected"
+        }
+      ],
+      "issues_found": [
+        {
+          "severity": "Medium",
+          "title": "Button Alignment",
+          "description": "Refined visual check required for hero CTA."
+        }
+      ],
+      "recommendations": [
+        "Check flexbox container rules.",
+        "Verify z-index for mobile menu."
+      ],
+      "markdown_report": "# Executive QA Report\n\nOverall the system is stable. Detected minor visual discrepancies in responsive viewports. Performance within target range."
+    }
+  }
+}
